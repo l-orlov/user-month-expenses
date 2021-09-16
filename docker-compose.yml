@@ -1,0 +1,47 @@
+version: '3.7'
+
+services:
+  postgres:
+    container_name: user-month-expenses-postgres
+    environment:
+      - PGDATA=/var/lib/postgresql/data/
+      - POSTGRES_DB=${PG_DATABASE}
+      - POSTGRES_USER=${PG_USER}
+      - POSTGRES_PASSWORD=${PG_PASSWORD}
+    image: postgres
+    ports:
+      - 54320:5432
+#    restart: unless-stopped
+    volumes:
+      - user-month-expenses-postgres:/var/lib/postgresql/data
+    networks:
+      - user-month-expenses
+
+  user-month-expenses-api:
+    build: .
+    depends_on:
+      - postgres
+    command: ./user-month-expenses
+    container_name: user-month-expenses-api
+    environment:
+      - CONFIG_PATH=${CONFIG_PATH}
+      - LOGGER_LEVEL=${LOGGER_LEVEL}
+      - LOGGER_FORMAT=${LOGGER_FORMAT}
+      - PG_ADDRESS=user-month-expenses-postgres:5432
+      - PG_USER=${PG_USER}
+      - PG_PASSWORD=${PG_PASSWORD}
+      - PG_DATABASE=${PG_DATABASE}
+    ports:
+      - 8080:8080
+#    restart: unless-stopped
+    networks:
+      - user-month-expenses
+
+volumes:
+  user-month-expenses-postgres:
+    driver: local
+
+networks:
+  user-month-expenses:
+    external: true
+    name: user-month-expenses
