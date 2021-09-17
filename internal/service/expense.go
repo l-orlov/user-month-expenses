@@ -41,8 +41,18 @@ func (s *UserExpenseService) GetUserExpensesWithParameters(ctx context.Context, 
 
 func (s *UserExpenseService) GetUserExpensesByCategories(
 	ctx context.Context, userID *uint64, size uint16,
-) ([]models.UserExpenseByCategory, error) {
-	return s.repo.GetUserExpensesByCategories(ctx, userID, size)
+) ([]models.UserExpenseByCategoryToShow, error) {
+	expenses, err := s.repo.GetUserExpensesByCategories(ctx, userID, size)
+	if err != nil {
+		return nil, err
+	}
+
+	var expensesToShow []models.UserExpenseByCategoryToShow
+	for _, e := range expenses {
+		expensesToShow = append(expensesToShow, e.ToUserExpenseByCategoryToShow())
+	}
+
+	return expensesToShow, nil
 }
 
 func (s *UserExpenseService) DeleteUserExpense(ctx context.Context, id uint64) error {

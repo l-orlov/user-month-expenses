@@ -8,7 +8,7 @@ const InfoBlock = ({ className, title, children }) => {
   return (
     <div className={classes}>
       <span>{title}:</span>
-      <span>{children}</span>
+      <span>{children} руб</span>
     </div>
   );
 };

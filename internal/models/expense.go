@@ -15,4 +15,15 @@ type (
 		Category string  `json:"category" db:"category"`
 		Amount   float64 `json:"amount" db:"amount"`
 	}
+	UserExpenseByCategoryToShow struct {
+		Category string `json:"category" db:"category"`
+		Amount   uint64 `json:"amount" db:"amount"`
+	}
 )
+
+func (u UserExpenseByCategory) ToUserExpenseByCategoryToShow() UserExpenseByCategoryToShow {
+	return UserExpenseByCategoryToShow{
+		Category: u.Category,
+		Amount:   uint64(u.Amount),
+	}
+}

@@ -24,7 +24,7 @@ type (
 		GetUserExpensesWithParameters(ctx context.Context, params models.UserExpenseParams) ([]models.UserExpense, error)
 		GetUserExpensesByCategories(
 			ctx context.Context, userID *uint64, size uint16,
-		) ([]models.UserExpenseByCategory, error)
+		) ([]models.UserExpenseByCategoryToShow, error)
 		DeleteUserExpense(ctx context.Context, id uint64) error
 	}
 	Service struct {
