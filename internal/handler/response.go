@@ -8,10 +8,6 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-const (
-	ctxLogEntry = "log-entry"
-)
-
 type errorResponse struct {
 	Message string `json:"message"`
 	Detail  string `json:"detail"`

@@ -62,5 +62,5 @@ func (h *Handler) InitRoutes() http.Handler {
 		}
 	}
 
-	return router
+	return CORS(router)
 }
