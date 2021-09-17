@@ -1,0 +1,19 @@
+.button {
+  color: black;
+  background-color: white;
+  border: 1px solid black;
+  box-sizing: border-box;
+  padding: 10px;
+  border-radius: 2px;
+
+  &:active {
+    background-color: green;
+  }
+
+  &.disabled {
+    background-color: #e0e0e0;
+    color: #585858;
+    border: none;
+    cursor: not-allowed;
+  }
+}

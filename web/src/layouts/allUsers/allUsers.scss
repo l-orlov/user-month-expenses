@@ -1,0 +1,13 @@
+.all-users {
+  display: flex;
+  flex-direction: column;
+
+  .all-users-content {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .button {
+    width: 200px;
+  }
+}

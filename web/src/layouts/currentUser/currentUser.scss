@@ -1,0 +1,13 @@
+.current-user-form {
+  display: flex;
+  align-items: flex-end;
+  gap: 20px;
+  width: 400px;
+  .input {
+    width: 100%;
+  }
+  button {
+    height: 35px;
+    width: 200px;
+  }
+}
