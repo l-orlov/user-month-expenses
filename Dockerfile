@@ -47,7 +47,6 @@ WORKDIR /app/
 # Copy our static executable and needed files.
 COPY --from=builder /builder/.bin/user-month-expenses .
 COPY --from=builder /builder/configs configs/
-COPY --from=builder /builder/static static/
 COPY --from=builder /builder/schema schema/
 
 # Use an unprivileged user.
