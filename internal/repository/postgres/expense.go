@@ -105,40 +105,37 @@ ORDER BY user_id ASC`, userMonthExpenseTable)
 }
 
 func (r *UserExpensePostgres) GetUserExpensesByCategories(
-	ctx context.Context, size uint16,
+	ctx context.Context, userID *uint64, size uint16,
 ) ([]models.UserExpenseByCategory, error) {
-	query := fmt.Sprintf(`
-SELECT category, sum(amount) as amount FROM %s
-GROUP BY category
-ORDER BY amount DESC
-LIMIT $1`, userMonthExpenseTable)
-
-	var expenses []models.UserExpenseByCategory
-
-	dbCtx, cancel := context.WithTimeout(ctx, r.dbTimeout)
-	defer cancel()
-
-	err := r.db.SelectContext(dbCtx, &expenses, query, &size)
-
-	return expenses, err
-}
-
-func (r *UserExpensePostgres) GetUserExpensesByUserIDAndCategories(
-	ctx context.Context, userID uint64, size uint16,
-) ([]models.UserExpenseByCategory, error) {
-	query := fmt.Sprintf(`
+	var query string
+	if userID != nil {
+		query = fmt.Sprintf(`
 SELECT category, sum(amount) as amount FROM %s
 WHERE user_id = $1
 GROUP BY category
 ORDER BY amount DESC
 LIMIT $2`, userMonthExpenseTable)
+	} else {
+		query = fmt.Sprintf(`
+SELECT category, sum(amount) as amount FROM %s
+GROUP BY category
+ORDER BY amount DESC
+LIMIT $1`, userMonthExpenseTable)
+	}
 
-	var expenses []models.UserExpenseByCategory
+	var (
+		expenses []models.UserExpenseByCategory
+		err      error
+	)
 
 	dbCtx, cancel := context.WithTimeout(ctx, r.dbTimeout)
 	defer cancel()
 
-	err := r.db.SelectContext(dbCtx, &expenses, query, &userID, &size)
+	if userID != nil {
+		err = r.db.SelectContext(dbCtx, &expenses, query, userID, &size)
+	} else {
+		err = r.db.SelectContext(dbCtx, &expenses, query, &size)
+	}
 
 	return expenses, err
 }
@@ -149,9 +146,7 @@ func (r *UserExpensePostgres) DeleteUserExpense(ctx context.Context, userID uint
 	dbCtx, cancel := context.WithTimeout(ctx, r.dbTimeout)
 	defer cancel()
 
-	if _, err := r.db.ExecContext(dbCtx, query, &userID); err != nil {
-		return err
-	}
+	_, err := r.db.ExecContext(dbCtx, query, &userID)
 
-	return nil
+	return err
 }

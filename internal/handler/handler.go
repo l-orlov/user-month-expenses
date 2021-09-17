@@ -57,7 +57,6 @@ func (h *Handler) InitRoutes() http.Handler {
 			expenses.GET("/", h.GetAllUserExpenses)
 			expenses.GET("/with-params", h.GetUserExpensesWithParameters)
 			expenses.GET("/by-categories", h.GetUserExpensesByCategories)
-			expenses.GET("/by-categories/:userID", h.GetUserExpensesByUserIDAndCategories)
 			expenses.PUT("/", h.UpdateUserExpense)
 			expenses.DELETE("/:id", h.DeleteUserExpense)
 		}

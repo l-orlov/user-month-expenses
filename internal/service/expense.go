@@ -39,14 +39,10 @@ func (s *UserExpenseService) GetUserExpensesWithParameters(ctx context.Context, 
 	return s.repo.GetUserExpensesWithParameters(ctx, params)
 }
 
-func (s *UserExpenseService) GetUserExpensesByCategories(ctx context.Context, size uint16) ([]models.UserExpenseByCategory, error) {
-	return s.repo.GetUserExpensesByCategories(ctx, size)
-}
-
-func (s *UserExpenseService) GetUserExpensesByUserIDAndCategories(
-	ctx context.Context, userID uint64, size uint16,
+func (s *UserExpenseService) GetUserExpensesByCategories(
+	ctx context.Context, userID *uint64, size uint16,
 ) ([]models.UserExpenseByCategory, error) {
-	return s.repo.GetUserExpensesByUserIDAndCategories(ctx, userID, size)
+	return s.repo.GetUserExpensesByCategories(ctx, userID, size)
 }
 
 func (s *UserExpenseService) DeleteUserExpense(ctx context.Context, id uint64) error {

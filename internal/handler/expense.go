@@ -114,48 +114,22 @@ func (h *Handler) GetUserExpensesWithParameters(c *gin.Context) {
 }
 
 func (h *Handler) GetUserExpensesByCategories(c *gin.Context) {
-	sizeStr, ok := c.GetQuery("size")
-	if !ok {
-		h.newErrorResponse(
-			c, http.StatusBadRequest, ierrors.NewBusiness(ErrNotValidSizeParameter, ""),
-		)
-		return
-	}
-
-	size, err := strconv.ParseUint(sizeStr, 10, 64)
-	if err != nil {
-		h.newErrorResponse(
-			c, http.StatusBadRequest, ierrors.NewBusiness(ErrNotValidSizeParameter, ""),
-		)
-		return
-	}
-
-	expenses, err := h.svc.UserExpense.GetUserExpensesByCategories(c, uint16(size))
-	if err != nil {
-		h.newErrorResponse(c, http.StatusInternalServerError, err)
-		return
-	}
-
-	if expenses == nil {
-		c.JSON(http.StatusOK, []struct{}{})
-		return
-	}
-
-	c.JSON(http.StatusOK, expenses)
-}
-
-func (h *Handler) GetUserExpensesByUserIDAndCategories(c *gin.Context) {
 	// ToDo: use query parameters and schema package may be
-	userID, err := strconv.ParseUint(c.Param("userID"), 10, 64)
-	if err != nil {
-		h.newErrorResponse(
-			c, http.StatusBadRequest, ierrors.NewBusiness(ErrNotValidIDParameter, ""),
-		)
-		return
+	var userID *uint64
+	if idStr, ok := c.GetQuery("userId"); ok && idStr != "" {
+		id, err := strconv.ParseUint(idStr, 10, 64)
+		if err != nil {
+			h.newErrorResponse(
+				c, http.StatusBadRequest, ierrors.NewBusiness(ErrNotValidIDParameter, ""),
+			)
+			return
+		}
+
+		userID = &id
 	}
 
 	sizeStr, ok := c.GetQuery("size")
-	if !ok {
+	if !ok || sizeStr == "" {
 		h.newErrorResponse(
 			c, http.StatusBadRequest, ierrors.NewBusiness(ErrNotValidSizeParameter, ""),
 		)
@@ -170,7 +144,7 @@ func (h *Handler) GetUserExpensesByUserIDAndCategories(c *gin.Context) {
 		return
 	}
 
-	expenses, err := h.svc.UserExpense.GetUserExpensesByUserIDAndCategories(c, userID, uint16(size))
+	expenses, err := h.svc.UserExpense.GetUserExpensesByCategories(c, userID, uint16(size))
 	if err != nil {
 		h.newErrorResponse(c, http.StatusInternalServerError, err)
 		return
